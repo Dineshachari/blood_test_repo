@@ -1,5 +1,4 @@
-
-import 'package:blood_test_repo/api_service.dart';
+import 'package:blood_test_repo/services/api_service.dart';
 import 'package:blood_test_repo/model/report_details_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/state_manager.dart';
@@ -9,24 +8,19 @@ class HomePageController extends GetxController {
   RxBool isLoading = true.obs;
   RxString error = RxString('');
 
- @override
+  @override
   void onInit() {
     super.onInit();
     fetchReports();
   }
 
-
   Future<void> fetchReports() async {
     try {
-            isLoading.value = true;
+      isLoading.value = true;
       final response = await ApiService.getReports(2);
       if (kDebugMode) {
         print('Status Code: ${response.statusCode}');
-      }
-      if (kDebugMode) {
         print('Response Type: ${response.data.runtimeType}');
-      }
-      if (kDebugMode) {
         print('Response Body: ${response.data}');
       }
 
@@ -45,9 +39,7 @@ class HomePageController extends GetxController {
 
       if (kDebugMode) {
         print('Parsed Reports: ${reports.length}');
-      }
-      if (reports.isNotEmpty) {
-        if (kDebugMode) {
+        if (reports.isNotEmpty) {
           print('First Report Metrics: ${reports.first.reportMetrics.keys.join(", ")}');
         }
       }
@@ -55,8 +47,6 @@ class HomePageController extends GetxController {
     } catch (e, stackTrace) {
       if (kDebugMode) {
         print('Error details: $e');
-      }
-      if (kDebugMode) {
         print('Stack trace: $stackTrace');
       }
       error.value = e.toString();

@@ -1,48 +1,44 @@
-import 'dart:convert';
 
 class BloodReportMetricModel {
   Map<String, ReportMetric> reportMetrics;
-  DateTime? testDate;
+  String testDate;
 
   BloodReportMetricModel({
     required this.reportMetrics,
-    this.testDate,
+    this.testDate = "",
   });
 
- factory BloodReportMetricModel.fromJson(Map<String, dynamic> json) {
-  final reportDetailsString = json['reportDetails'] as String;
-  final reportDetailsJson = jsonDecode(reportDetailsString);
-  
-  return BloodReportMetricModel(
-    reportMetrics: Map.from(reportDetailsJson["reportMetrics"]).map(
-      (k, v) => MapEntry<String, ReportMetric>(k, ReportMetric.fromJson(v)),
-    ),
-    testDate: json['testDate'] != null ? DateTime.parse(json['testDate']) : null,
-  );
-}
+  factory BloodReportMetricModel.fromJson(Map<String, dynamic> json) {
+    return BloodReportMetricModel(
+      reportMetrics: Map.from(json["reportMetrics"]).map(
+        (k, v) => MapEntry<String, ReportMetric>(k, ReportMetric.fromJson(v)),
+      ),
+      testDate: json['testDate'] ,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     "reportMetrics": Map.from(reportMetrics).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
-    "testDate": testDate?.toIso8601String(),
+    "testDate": testDate,
   };
 }
 
 class ReportMetric {
-  String? upperBound;
-  String? lowerBound;
+  String upperBound;
+  String lowerBound;
   String unit;
   String value;
 
   ReportMetric({
-    this.upperBound,
-    this.lowerBound,
-    required this.unit,
-    required this.value,
+    this.upperBound = "",
+    this.lowerBound = "",
+     this.unit = "",
+     this.value = "",
   });
 
   factory ReportMetric.fromJson(Map<String, dynamic> json) => ReportMetric(
-    upperBound: json["upperBound"],
-    lowerBound: json["lowerBound"],
+    upperBound: json["upperBound"] ?? "",
+    lowerBound: json["lowerBound"] ?? "",
     unit: json["unit"] ?? "",
     value: json["value"] ?? "",
   );
