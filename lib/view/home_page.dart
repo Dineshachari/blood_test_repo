@@ -51,15 +51,18 @@ Widget build(BuildContext context) {
       if (homeVM.isLoading.value) {
         return _buildSkeletonLoading();
       } else if (homeVM.error.value.isNotEmpty) {
-      return const Center(
-          child: Text(
-            "An error occurred. Please try again later.",
-            style: TextStyle(
-              fontSize: 16,
-              color: AppColors.textColor,
+      return RefreshIndicator(
+        onRefresh: _refreshData,
+        child: const Center(
+            child: Text(
+              "An error occurred. Please try again later.",
+              style: TextStyle(
+                fontSize: 16,
+                color: AppColors.textColor,
+              ),
             ),
           ),
-        );
+      );
       } else if (homeVM.report.value == null || homeVM.report.value!.results.isEmpty) {
         return const Center(child: Text("No data available"));
       } else {
