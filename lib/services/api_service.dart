@@ -10,7 +10,7 @@ class ApiService {
   );
 
   static Future<Response<dynamic>> getReports(int userId) async {
-    const url = 'https://my-kaizen-backend.onrender.com/api/getReports';
+    const url = 'https://my-kaizen-backend.onrender.com/api/getSummarizedReport';
 
     try {
       final response = await _dio.post(
@@ -36,3 +36,4 @@ class ApiService {
     }
   }
 }
+

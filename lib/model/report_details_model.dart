@@ -1,52 +1,60 @@
+class BloodReportModel {
+  final Map<String, TestResult> results;
 
-class BloodReportMetricModel {
-  Map<String, ReportMetric> reportMetrics;
-  String testDate;
+  BloodReportModel({required this.results});
 
-  BloodReportMetricModel({
-    required this.reportMetrics,
-    this.testDate = "",
-  });
-
-  factory BloodReportMetricModel.fromJson(Map<String, dynamic> json) {
-    return BloodReportMetricModel(
-      reportMetrics: Map.from(json["reportMetrics"]).map(
-        (k, v) => MapEntry<String, ReportMetric>(k, ReportMetric.fromJson(v)),
-      ),
-      testDate: json['testDate'] ,
-    );
+  factory BloodReportModel.fromJson(Map<String, dynamic> json) {
+    Map<String, TestResult> results = {};
+    json.forEach((key, value) {
+      results[key] = TestResult.fromJson(value);
+    });
+    return BloodReportModel(results: results);
   }
-
-  Map<String, dynamic> toJson() => {
-    "reportMetrics": Map.from(reportMetrics).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
-    "testDate": testDate,
-  };
 }
 
-class ReportMetric {
-  String upperBound;
-  String lowerBound;
-  String unit;
-  String value;
+class TestResult {
+  final String? date;
+  final List<HistoricalDatum> historicalData;
+  final String? latestResult;
+  final List<String>? normalRange;
+  final String? testName;
+  final String? unit;
 
-  ReportMetric({
-    this.upperBound = "",
-    this.lowerBound = "",
-     this.unit = "",
-     this.value = "",
+  TestResult({
+    this.date,
+    required this.historicalData,
+    this.latestResult,
+    this.normalRange,
+    this.testName,
+    this.unit,
   });
 
-  factory ReportMetric.fromJson(Map<String, dynamic> json) => ReportMetric(
-    upperBound: json["upperBound"] ?? "",
-    lowerBound: json["lowerBound"] ?? "",
-    unit: json["unit"] ?? "",
-    value: json["value"] ?? "",
-  );
+  factory TestResult.fromJson(Map<String, dynamic> json) {
+    return TestResult(
+      date: json["date"],
+      historicalData: (json["historicalData"] as List?)
+          ?.map((x) => HistoricalDatum.fromJson(x))
+          .toList() ?? [],
+      latestResult: json["latestResult"]?.toString(),
+      normalRange: (json["normalRange"] as List?)
+          ?.map((x) => x.toString())
+          .toList(),
+      testName: json["testName"],
+      unit: json["unit"],
+    );
+  }
+}
 
-  Map<String, dynamic> toJson() => {
-    "upperBound": upperBound,
-    "lowerBound": lowerBound,
-    "unit": unit,
-    "value": value,
-  };
+class HistoricalDatum {
+  final String? date;
+  final String? value;
+
+  HistoricalDatum({this.date, this.value});
+
+  factory HistoricalDatum.fromJson(Map<String, dynamic> json) {
+    return HistoricalDatum(
+      date: json["date"],
+      value: json["value"]?.toString(),
+    );
+  }
 }

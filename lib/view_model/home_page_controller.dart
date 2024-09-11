@@ -1,10 +1,10 @@
 import 'package:blood_test_repo/services/api_service.dart';
 import 'package:blood_test_repo/model/report_details_model.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/state_manager.dart';
+import 'package:get/get.dart';
 
 class HomePageController extends GetxController {
-  RxList<BloodReportMetricModel> reports = <BloodReportMetricModel>[].obs;
+  Rx<BloodReportModel?> report = Rx<BloodReportModel?>(null);
   RxBool isLoading = true.obs;
   RxString error = RxString('');
 
@@ -28,22 +28,22 @@ class HomePageController extends GetxController {
         throw Exception('Response data is null');
       }
 
-      if (response.data is List) {
-        reports.value = (response.data as List)
-            .map((json) => BloodReportMetricModel.fromJson(json))
-            .toList();
-        isLoading.value = false;
+      if (response.data is List && response.data.isNotEmpty) {
+        report.value = BloodReportModel.fromJson(response.data[0]);
+        if (kDebugMode) {
+          print('Parsed Report: ${report.value?.results.length} tests');
+        }
+      } else if (response.data is Map<String, dynamic>) {
+        // If the response is a single object instead of a list
+        report.value = BloodReportModel.fromJson(response.data);
+        if (kDebugMode) {
+          print('Parsed Report: ${report.value?.results.length} tests');
+        }
       } else {
         throw Exception('Unexpected response format: ${response.data.runtimeType}');
       }
 
-      if (kDebugMode) {
-        print('Parsed Reports: ${reports.length}');
-        if (reports.isNotEmpty) {
-          print('First Report Metrics: ${reports.first.reportMetrics.keys.join(", ")}');
-        }
-      }
-
+      isLoading.value = false;
     } catch (e, stackTrace) {
       if (kDebugMode) {
         print('Error details: $e');
