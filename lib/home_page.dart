@@ -1,5 +1,4 @@
-import 'dart:developer';
-import 'package:dio/dio.dart';
+import 'package:blood_test_repo/api_service.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,28 +16,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getReports() async {
-    Dio dio = Dio();
-    String url = 'https://my-kaizen-backend.onrender.com/api/getReports';
-    Map<String, dynamic> requestData = {
-      "userId": 2,
-    };
     try {
-      Response response = await dio.post(
-        url,
-        data: requestData,
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        ),
-      );
-      if (response.statusCode == 200) {
-        print('Response data: ${response.data}');
-      } else {
-        print('Error: ${response.statusCode} - ${response.statusMessage}');
-      }
-    } catch (e) {
-      print('Exception: $e');
+      final response = await ApiService.getReports(2);
+      // Process the successful response (e.g., parse JSON data)
+      print(response.data);
+    } on Exception catch (e) {
+      print('Error: ${e.toString()}');
     }
   }
 
