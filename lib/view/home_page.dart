@@ -174,6 +174,8 @@ Widget _buildTestResultWidget(String testName, TestResult testResult) {
 
 
 
+
+
 Widget _buildLineChart(TestResult testResult) {
   final spots = testResult.historicalData.asMap().entries.map((entry) {
     final index = entry.key.toDouble();
@@ -283,35 +285,43 @@ Widget _buildLineChart(TestResult testResult) {
             dotData: FlDotData(
               show: true,
               getDotPainter: (spot, percent, barData, index) {
-                Color dotColor = (spot.y >= lowerBound && spot.y <= upperBound)
-                    ? Colors.green
-                    : Colors.red;
+               Color dotColor = Colors.blue;
+                if (spot.y < lowerBound) {
+                  dotColor = Colors.orange;
+                } else if (spot.y > upperBound) {
+                  dotColor = Colors.orange;
+                } else {
+                  dotColor = Colors.green;
+                }
                 return FlDotCirclePainter(
                   radius: 4,
                   color: dotColor,
                   strokeWidth: 2,
-                  strokeColor: Colors.white,
+                  strokeColor:dotColor,
                 );
               },
             ),
             belowBarData: BarAreaData(
               show: true,
-              color: Colors.green.withOpacity(0.2),
+                        color: Colors.transparent,
+                        
               gradient: LinearGradient(
                 colors: [
-                  Colors.green.withOpacity(0.4),
-                  Colors.green.withOpacity(0.1),
+                  Colors.orange.withOpacity(0.7),
+                  Colors.green.withOpacity(0.7),
+                  Colors.orange.withOpacity(0.7),
                 ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
+                                stops: [0, (upperBound - lowerBound) / maxY, 1],
+                  begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
               ),
-              cutOffY: upperBound,
+              cutOffY: lowerBound,
               applyCutOffY: true,
             ),
           ),
         ],
         lineTouchData: LineTouchData(
-          enabled: spots.isNotEmpty,
+                 enabled: true,
           touchTooltipData: LineTouchTooltipData(
             tooltipBgColor: Colors.blueAccent,
             getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
@@ -333,13 +343,15 @@ Widget _buildLineChart(TestResult testResult) {
           horizontalLines: [
             HorizontalLine(
               y: lowerBound,
-              color: Colors.green,
+                        color: Colors.grey,
+
               strokeWidth: 1,
               dashArray: [5, 5],
             ),
             HorizontalLine(
               y: upperBound,
-              color: Colors.green,
+                            color: Colors.grey,
+
               strokeWidth: 1,
               dashArray: [5, 5],
             ),
