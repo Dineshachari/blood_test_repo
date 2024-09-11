@@ -1,8 +1,6 @@
 import 'package:blood_test_repo/bindings/app_binding.dart';
 import 'package:blood_test_repo/view/home_page.dart';
-import 'package:blood_test_repo/view_model/home_page_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:get/instance_manager.dart';
 import 'package:get/route_manager.dart';
 
 void main() {
